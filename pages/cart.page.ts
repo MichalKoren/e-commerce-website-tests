@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page, expect, Locator } from "@playwright/test";
 
 export class CartPage {
   readonly page: Page;
@@ -8,7 +8,7 @@ export class CartPage {
   }
 
   /** A collection of expected login page elements */
-  get elements() {
+  get elements(): Record<string, Locator> {
     return {
       CART_LIST: this.page.getByTestId("cart-list"),
       PRODUCTS_PRICE: this.page.getByTestId("products-price"),

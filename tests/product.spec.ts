@@ -16,30 +16,25 @@ test.describe("Product page tests", () => {
   test("should allow user to search and filter desired products", async ({
     page,
   }) => {
-    productPage = new ProductPage(page);
-    productPage.open();
-    productPage.searchProductByName(ProductsData.searchedProduct);
-    productPage.waitForProductsToBeLoaded();
-    productPage.filterProductsByType(ProductsData.usedFilter);
-    productPage.waitForProductsToBeLoaded();
-    productPage.assertProductsAreFiltered(ProductsData.usedFilter);
+    await productPage.searchProductByName(ProductsData.searchedProduct);
+    await productPage.waitForProductsToBeLoaded(); // wait for products to be loaded. For example wait for lazy loading to be finished or placeholders to disappear
+    await productPage.filterProductsByType(ProductsData.usedFilter);
+    await productPage.waitForProductsToBeLoaded(); // wait for products to be loaded. For example wait for lazy loading to be finished or placeholders to disappear
+    await productPage.assertProductsAreFiltered(ProductsData.usedFilter);
   });
 
   test("should allow add product to cart", async ({ page }) => {
-    productPage = new ProductPage(page);
-    cartPage = new CartPage(page);
-    const addedNumberOfProducts = 1;
-    productPage.open();
-    productPage.searchProductByName(ProductsData.searchedProduct);
-    productPage.waitForProductsToBeLoaded();
-    productPage.filterProductsByType(ProductsData.usedFilter);
-    productPage.waitForProductsToBeLoaded();
-    productPage.clickOnProductDetails();
+    const addedNumberOfProducts = 1; // In real scenario it will be extracted to separate file with test data. Currently, it is mock in this test, so I left it here
+    await productPage.searchProductByName(ProductsData.searchedProduct);
+    await productPage.waitForProductsToBeLoaded(); // wait for products to be loaded. For example wait for lazy loading to be finished or placeholders to disappear
+    await productPage.filterProductsByType(ProductsData.usedFilter);
+    await productPage.waitForProductsToBeLoaded(); // wait for products to be loaded. For example wait for lazy loading to be finished or placeholders to disappear
+    await productPage.clickOnProductDetails();
     const productPrice = await productPage.getProductPrice();
     const productName = await productPage.getProductName();
-    productPage.clickOnAddToCartButton();
-    cartPage.assertProductPrice(productPrice);
-    cartPage.assertProductCount(addedNumberOfProducts);
-    cartPage.assertProductIsVisible(productName);
+    await productPage.clickOnAddToCartButton();
+    await cartPage.assertProductPrice(productPrice);
+    await cartPage.assertProductCount(addedNumberOfProducts);
+    await cartPage.assertProductIsVisible(productName);
   });
 });

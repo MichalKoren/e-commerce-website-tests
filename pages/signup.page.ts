@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page, expect, Locator } from "@playwright/test";
 import { SignUpMessages, UserCredentials } from "../support/types";
 
 export class SignUpPage {
@@ -9,7 +9,7 @@ export class SignUpPage {
   }
 
   /** A collection of expected sign in page elements */
-  get elements() {
+  get elements(): Record<string, Locator> {
     return {
       EMAIL_INPUT: this.page.getByPlaceholder("Email"),
       USERNAME: this.page.getByPlaceholder("username"),
@@ -25,7 +25,7 @@ export class SignUpPage {
    **/
   async open(): Promise<void> {
     await this.page.goto("/index.php?rt=account/create");
-    await this.page.waitForLoadState("domcontentloaded");
+    await this.page.waitForLoadState("domcontentloaded"); // Wait for the DOM content to be fully loaded before proceeding with further actions
   }
 
   /**
@@ -40,15 +40,15 @@ export class SignUpPage {
   }
 
   /**
-   * Asserts that the user is successfully created by checking the success message and redirection URL
+   * Asserts that redirection URL worked and the user is successfully created by checking the success message
    * @param expectedMessage - the expected success message to be displayed
    **/
   async assertUserIsSuccessfullyCreated(
     expectedMessage: SignUpMessages
   ): Promise<void> {
+    await expect(this.page).toHaveURL(/.*index.php?rt=accountsuccess/);
     await expect(this.elements.SUCCESS_MESSAGE).toBeVisible();
     await expect(this.elements.SUCCESS_MESSAGE).toContainText(expectedMessage);
-    await expect(this.page).toHaveURL(/.*index.php?rt=accountsuccess/);
   }
 
   /**

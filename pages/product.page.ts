@@ -1,13 +1,14 @@
-import { Page, expect } from "@playwright/test";
+import { Page, expect, Locator } from "@playwright/test";
 
 export class ProductPage {
   readonly page: Page;
+
   constructor(page: Page) {
     this.page = page;
   }
 
   /** A collection of expected login page elements */
-  get elements() {
+  get elements(): Record<string, Locator> {
     return {
       SEARCH_INPUT: this.page.getByTestId("search-input"),
       SEARCH_BUTTON: this.page.getByTestId("search-button"),
@@ -18,10 +19,10 @@ export class ProductPage {
       APPLIED_FILTERS: this.page.getByTestId("applied-filters"),
       PRODUCT_DETAILS_BUTTON: this.page.getByTestId("product-details-button"),
       PRODUCT_ICON: this.page.getByTestId("product-icon"),
-      PRODUCT_DESCRIPTION: this.elements.getByTestId("product-description"),
-      ADD_TO_CART_BUTTON: this.elements.getByTestId("add-to-cart-button"),
-      PRODUCT_PRICE: this.elements.getByTestId("product-price"),
-      PRODUCT_NAME: this.elements.getByLabel("product-name"),
+      PRODUCT_DESCRIPTION: this.page.getByTestId("product-description"),
+      ADD_TO_CART_BUTTON: this.page.getByTestId("add-to-cart-button"),
+      PRODUCT_PRICE: this.page.getByTestId("product-price"),
+      PRODUCT_NAME: this.page.getByLabel("product-name"),
     };
   }
 
@@ -32,6 +33,7 @@ export class ProductPage {
 
   /**
    * Waits for the products to be fully loaded by checking the loader indicator
+   * For example wait for placeholder to be hidden or lazy loading to be finished
    **/
   async waitForProductsToBeLoaded() {
     const loadIndicators = await this.elements.LOADER.all();
@@ -57,8 +59,8 @@ export class ProductPage {
    * @param filterType - the type of filter to apply
    **/
   async filterProductsByType(filterType: string) {
-    this.elements.FILTER_DROPDOWN.click();
-    this.elements.FILTER_LIST.waitFor({ state: "visible" });
+    await this.elements.FILTER_DROPDOWN.click();
+    await this.elements.FILTER_LIST.waitFor({ state: "visible" });
     await this.elements.FILTER_LIST.filter({ hasText: filterType }).click();
   }
 
@@ -82,7 +84,7 @@ export class ProductPage {
    * Retrieves the name of the product
    * @returns the name of the product
    **/
-  async getProductName() {
+  async getProductName(): Promise<string> {
     return (await this.elements.PRODUCT_NAME.textContent()) || "";
   }
 

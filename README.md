@@ -5,12 +5,14 @@ This repository contains automated tests written in TypeScript using Playwright 
 ## Setup
 
 - Requires node.js version 20 or above (example: v20.10.0)
-- `npm install` - Install the dependencies using
+- `npm install` - Install the dependencies
 - `npx playwright install` - Install browsers
 
 ## Usage
 
-- `npx playwright test --ui` - run the tests in headed mode
+- `npm run test:ui` - run the tests in headed mode
+- `npm run test:headless` - run tests in headless mode
+- `npm run test:chrome` - run tests in Chrome browser
 - `npx playwright test tests/<test_file_name.spec.ts>` - run specific test in headless mode
 
 ## Folder Structure

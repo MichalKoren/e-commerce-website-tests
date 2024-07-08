@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page, expect, Locator } from "@playwright/test";
 import { UserCredentials } from "../support/types";
 
 export class LoginPage {
@@ -9,7 +9,7 @@ export class LoginPage {
   }
 
   /** A collection of expected login page elements */
-  get elements() {
+  get elements(): Record<string, Locator> {
     return {
       EMAIL_INPUT: this.page.getByPlaceholder("Email"),
       USERNAME: this.page.getByPlaceholder("username"),

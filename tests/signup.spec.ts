@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { SignUpPage } from "../pages/signup.page";
 import {
   correctUser,
@@ -20,21 +20,27 @@ test.describe("Sign up page tests", () => {
 
   test("should allow user to register successfully", async ({ page }) => {
     await signUpPage.signUp(correctUser);
-    await signUpPage.assertUserIsSuccessfullyCreated(
+    await expect(signUpPage.elements.SUCCESS_MESSAGE).toBeVisible();
+    await expect(signUpPage.elements.SUCCESS_MESSAGE).toContainText(
       SignUpMessages.successfulMessage
     );
+    await expect(signUpPage.page).toHaveURL(/.*index.php?rt=accountsuccess/);
   });
 
   test("should not allow registration with invalid email", async ({ page }) => {
     await signUpPage.signUp(invalidEmail);
-    await signUpPage.assertErrorMessageIsDisplayed(SignUpMessages.invalidEmail);
+    await expect(signUpPage.elements.ERROR_MESSAGE).toBeVisible();
+    await expect(signUpPage.elements.ERROR_MESSAGE).toContainText(
+      SignUpMessages.invalidEmail
+    );
   });
 
   test("should not allow registration with existing email", async ({
     page,
   }) => {
     await signUpPage.signUp(existingEmail);
-    await signUpPage.assertErrorMessageIsDisplayed(
+    await expect(signUpPage.elements.ERROR_MESSAGE).toBeVisible();
+    await expect(signUpPage.elements.ERROR_MESSAGE).toContainText(
       SignUpMessages.existingEmail
     );
   });
@@ -43,7 +49,8 @@ test.describe("Sign up page tests", () => {
     page,
   }) => {
     await signUpPage.signUp(existingUserName);
-    await signUpPage.assertErrorMessageIsDisplayed(
+    await expect(signUpPage.elements.ERROR_MESSAGE).toBeVisible();
+    await expect(signUpPage.elements.ERROR_MESSAGE).toContainText(
       SignUpMessages.existingUserName
     );
   });
@@ -52,7 +59,8 @@ test.describe("Sign up page tests", () => {
     page,
   }) => {
     await signUpPage.signUp(invalidUserName);
-    await signUpPage.assertErrorMessageIsDisplayed(
+    await expect(signUpPage.elements.ERROR_MESSAGE).toBeVisible();
+    await expect(signUpPage.elements.ERROR_MESSAGE).toContainText(
       SignUpMessages.invalidUserName
     );
   });
@@ -61,7 +69,8 @@ test.describe("Sign up page tests", () => {
     page,
   }) => {
     await signUpPage.signUp(invalidPassword);
-    await signUpPage.assertErrorMessageIsDisplayed(
+    await expect(signUpPage.elements.ERROR_MESSAGE).toBeVisible();
+    await expect(signUpPage.elements.ERROR_MESSAGE).toContainText(
       SignUpMessages.invalidPassword
     );
   });

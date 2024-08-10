@@ -1,5 +1,5 @@
-import { Page, expect } from "@playwright/test";
-import { SignUpMessages, UserCredentials } from "../support/types";
+import { Page } from "@playwright/test";
+import { UserCredentials } from "../support/types";
 
 export class SignUpPage {
   readonly page: Page;
@@ -37,28 +37,5 @@ export class SignUpPage {
     await this.elements.USERNAME.fill(user.username);
     await this.elements.PASSWORD_INPUT.fill(user.password);
     await this.elements.SIGNUP_BUTTON.click();
-  }
-
-  /**
-   * Asserts that the user is successfully created by checking the success message and redirection URL
-   * @param expectedMessage - the expected success message to be displayed
-   **/
-  async assertUserIsSuccessfullyCreated(
-    expectedMessage: SignUpMessages
-  ): Promise<void> {
-    await expect(this.elements.SUCCESS_MESSAGE).toBeVisible();
-    await expect(this.elements.SUCCESS_MESSAGE).toContainText(expectedMessage);
-    await expect(this.page).toHaveURL(/.*index.php?rt=accountsuccess/);
-  }
-
-  /**
-   * Asserts that the error message is displayed during the sign-up process
-   * @param errorMessage - the expected error message to be displayed
-   **/
-  async assertErrorMessageIsDisplayed(
-    errorMessage: SignUpMessages
-  ): Promise<void> {
-    await expect(this.elements.ERROR_MESSAGE).toBeVisible();
-    await expect(this.elements.ERROR_MESSAGE).toContainText(errorMessage);
   }
 }

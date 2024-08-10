@@ -1,7 +1,8 @@
-import { Page, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 
 export class ProductPage {
   readonly page: Page;
+
   constructor(page: Page) {
     this.page = page;
   }
@@ -57,8 +58,8 @@ export class ProductPage {
    * @param filterType - the type of filter to apply
    **/
   async filterProductsByType(filterType: string) {
-    this.elements.FILTER_DROPDOWN.click();
-    this.elements.FILTER_LIST.waitFor({ state: "visible" });
+    await this.elements.FILTER_DROPDOWN.click();
+    await this.elements.FILTER_LIST.waitFor({ state: "visible" });
     await this.elements.FILTER_LIST.filter({ hasText: filterType }).click();
   }
 
@@ -82,7 +83,7 @@ export class ProductPage {
    * Retrieves the name of the product
    * @returns the name of the product
    **/
-  async getProductName() {
+  async getProductName(): Promise<string> {
     return (await this.elements.PRODUCT_NAME.textContent()) || "";
   }
 
@@ -92,17 +93,5 @@ export class ProductPage {
    **/
   async getProductPrice(): Promise<string> {
     return (await this.elements.PRODUCT_PRICE.textContent()) || "";
-  }
-
-  /**
-   * Asserts that the products are filtered correctly
-   * @param expectedFilter - the expected filter to be applied
-   **/
-  async assertProductsAreFiltered(expectedFilter: string) {
-    const appliedFilterClass = this.elements.FILTER_LIST.filter({
-      hasText: expectedFilter,
-    }).getAttribute("class");
-    expect(appliedFilterClass).toContain("selected");
-    await expect(this.elements.PRODUCT_LABEL).toHaveText(expectedFilter);
   }
 }

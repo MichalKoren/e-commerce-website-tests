@@ -1,4 +1,4 @@
-import { Page, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { UserCredentials } from "../support/types";
 
 export class LoginPage {
@@ -36,13 +36,5 @@ export class LoginPage {
     await this.elements.PASSWORD_INPUT.fill(user.password);
     await this.elements.LOGIN_BUTTON.click();
     await this.page.waitForLoadState("domcontentloaded");
-  }
-
-  /**
-   * Asserts that the user is successfully logged in by checking the homepage title and URL
-   **/
-  async assertUserIsLoggedIn(): Promise<void> {
-    await expect(this.elements.HOME_PAGE_TITLE).toBeVisible();
-    await expect(this.page).toHaveURL(/.*index.php?rt=homepage/);
   }
 }
